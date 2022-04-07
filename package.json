@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@attentionstreams/contracts": "0.0.4",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -17,6 +18,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "contracts:compile": "typechain --target ethers-v5 --out-dir src/types/contracts \"./node_modules/@attentionstreams/contracts/artifacts/contracts/main/**/*.json\"",
+    "prepare": "yarn contracts:compile",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -39,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typechain/ethers-v5": "^10.0.0",
+    "eslint": "^8.12.0",
+    "typechain": "^8.0.0"
   }
 }
