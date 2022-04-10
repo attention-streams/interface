@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useCallback } from 'react';
 import { createTheme, styled, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
@@ -20,6 +21,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './listItems';
 import Deposits from './Deposits';
 import Orders from './Orders';
+import { Button } from '@mui/material';
+import { useArenaContract } from '../hooks/useContracts';
+import { TopicStruct } from '../types/contracts/Arena';
+import { useWeb3React } from '@web3-react/core';
+import { injected } from '../connectors';
 
 function Copyright(props: any) {
   return (
@@ -90,58 +96,176 @@ function DashboardContent() {
     setOpen(!open);
   };
 
+  function getAppBar() {
+    return (
+      <AppBar position="absolute" open={open}>
+        <Toolbar
+          sx={{
+            pr: '24px', // keep right padding when drawer closed
+          }}
+        >
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={toggleDrawer}
+            sx={{
+              marginRight: '36px',
+              ...(open && { display: 'none' }),
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+            Dashboard
+          </Typography>
+          <IconButton color="inherit">
+            <Badge badgeContent={4} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+    );
+  }
+
+  function getDrawer() {
+    return (
+      <Drawer variant="permanent" open={open}>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            px: [1],
+          }}
+        >
+          <IconButton onClick={toggleDrawer}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </Toolbar>
+        <Divider />
+        <List component="nav">
+          {mainListItems}
+          <Divider sx={{ my: 1 }} />
+          {secondaryListItems}
+        </List>
+      </Drawer>
+    );
+  }
+
+  function getRecentOrders() {
+    return (
+      <Grid item xs={12}>
+        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+          <Orders />
+        </Paper>
+      </Grid>
+    );
+  }
+
+  function getRecentDeposits() {
+    return (
+      <Grid item xs={12} md={4} lg={3}>
+        <Paper
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            height: 240,
+          }}
+        >
+          <Deposits />
+        </Paper>
+      </Grid>
+    );
+  }
+
+  const arenaContract = useArenaContract();
+  const createTopic = useCallback(() => {
+    // const arena = {
+    //   _name: 'Test Arena',
+    //   _token: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+    //   _minContributionAmount: BigNumber.from(10),
+    //   _maxChoiceFeePercentage: 3000, // 1 percent
+    //   _maxTopicFeePercentage: 500, // 5 percent
+    //   _arenaFeePercentage: 1000, // 10 percent
+    //   _choiceCreationFee: BigNumber.from(0),
+    //   _topicCreationFee: BigNumber.from(0),
+    //   _funds: '0xFABB0ac9d68B0B445fB7357272Ff202C5651694a',
+    // };
+    const topic: TopicStruct = {
+      _cycleDuration: 100, // 100 blocks
+      _sharePerCyclePercentage: 100 * 10 ** 2, // 100%
+
+      _prevContributorsFeePercentage: 12 * 10 ** 2, // 12 %
+      _topicFeePercentage: 5 * 10 ** 2, // 5%
+
+      _maxChoiceFeePercentage: 25 * 10 ** 2, // 25%
+
+      _relativeSupportThreshold: 0,
+      _fundingPeriod: 0,
+      _fundingPercentage: 0,
+      _funds: '0x71bE63f3384f5fb98995898A86B02Fb2426c5788',
+    };
+    console.log(arenaContract);
+    arenaContract?.addTopic(topic);
+  }, [arenaContract]);
+  const ArenaForm = () => {
+    return <Button onClick={createTopic}>Create Topic</Button>;
+  };
+  const { active, account, library, connector, activate, deactivate } = useWeb3React();
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
+  async function disconnect() {
+    try {
+      await deactivate();
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
+  const renderConnector = () => {
+    return active ? (
+      <p>
+        {account} <Button onClick={disconnect}>disconnect</Button>
+      </p>
+    ) : (
+      <Button onClick={connect}>connect</Button>
+    );
+  };
+
+  function getHeader() {
+    return (
+      <Grid item xs={12} md={8} lg={9}>
+        <Paper
+          sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            height: 240,
+          }}
+        >
+          {renderConnector()}
+          {ArenaForm()}
+        </Paper>
+      </Grid>
+    );
+  }
+
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-              Dashboard
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
-          </List>
-        </Drawer>
+        {getAppBar()}
+        {getDrawer()}
         <Box
           component="main"
           sx={{
@@ -155,36 +279,9 @@ function DashboardContent() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                ></Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
+              {getHeader()}
+              {getRecentDeposits()}
+              {getRecentOrders()}
             </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>

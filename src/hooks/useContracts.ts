@@ -18,6 +18,9 @@ export function useContract<T extends Contract = Contract>(
   const { library, account, chainId } = useActiveWeb3React();
 
   return useMemo(() => {
+    console.log('useActiveWeb3React');
+    console.log(chainId);
+    console.log(account);
     if (!addressOrAddressMap || !ABI || !library || !chainId) return null;
     let address: string | undefined;
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap;
