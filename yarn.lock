@@ -18,12 +18,13 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@attentionstreams/contracts@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@attentionstreams/contracts/-/contracts-0.0.4.tgz#0a0891820dfb1efeed6ea9f1f44c0df910dd858c"
-  integrity sha512-+fj8+pteOihU+Rly4X4/B+tRDi3dENvfTSS8cKD/iLp6w+bJN9767bhBR9KYlPcp6VITDWBzj2pGm74Loh/tvQ==
+"@attentionstreams/contracts@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@attentionstreams/contracts/-/contracts-0.0.6.tgz#b18520eb4cc6894574e9e7770df721ca64298c9c"
+  integrity sha512-BhdSwIhP2r9GtTVJz+KJdWc2kxHgV3VzcGtN4VlNeI7c+QQVMZobbIeucbMutg1b3D3/LfP8FpyJdBqR74vu7w==
   dependencies:
     "@openzeppelin/contracts" "^4.5.0"
+    "@openzeppelin/contracts-upgradeable" "^4.7.2"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.0", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.8.3":
   version "7.16.7"
@@ -2133,6 +2134,11 @@
   dependencies:
     mkdirp "^1.0.4"
     rimraf "^3.0.2"
+
+"@openzeppelin/contracts-upgradeable@^4.7.2":
+  version "4.7.2"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts-upgradeable/-/contracts-upgradeable-4.7.2.tgz#414096e21f048200cbb7ad4fe4c6de2e822513bf"
+  integrity sha512-3dgc6qVmFch/uOmlmKnw5/v3JxwXcZD4T10/9CI1OUbX8AqjoZrBGKfxN1z3QxnIXRU/X31/BItJezJSDDTe7Q==
 
 "@openzeppelin/contracts@^4.5.0":
   version "4.5.0"

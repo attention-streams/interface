@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@attentionstreams/contracts": "0.0.4",
+    "@attentionstreams/contracts": "0.0.6",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@ethersproject/address": "^5.6.0",
