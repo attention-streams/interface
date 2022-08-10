@@ -8,16 +8,12 @@ import MulticallUpdater from 'state/multicall/updater';
 import TransactionUpdater from 'state/transactions/updater';
 import UserUpdater from 'state/user/updater';
 
-import { Web3Provider } from '@ethersproject/providers';
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core';
 import { NetworkContextName } from './constants/misc';
 import Web3ReactManager from './components/Web3ReactManager';
+import { getLibrary } from 'utils/library';
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
-
-function getLibrary(provider: any) {
-  return new Web3Provider(provider);
-}
 
 function Updaters() {
   return (

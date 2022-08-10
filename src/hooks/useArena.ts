@@ -22,7 +22,6 @@ export function useArena() {
   const getTopicsResult = useSingleContractMultipleData(arenaContract, 'topics', getTopicsCallInputs);
 
   const topics = useMemo(() => {
-    console.log(getTopicsResult);
     return getTopicsResult.reduce((acc: TopicStruct[], value) => {
       if (!value.result) return acc;
       const result = value.result[0];
@@ -65,7 +64,6 @@ export function useTopic(topicId: number) {
   const getChoicesResult = useSingleContractMultipleData(arenaContract, 'topicChoices', getChoicesCallInputs);
 
   const choices = useMemo(() => {
-    console.log(getChoicesResult);
     return getChoicesResult.reduce((acc: ChoiceStruct[], value) => {
       if (!value.result) return acc;
       const result = value.result[0];

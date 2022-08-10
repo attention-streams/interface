@@ -13,7 +13,7 @@ export const CHAIN_IDS_TO_NAMES = {
 /**
  * Array of all the supported chain IDs
  */
-export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
+export const SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
   (id) => typeof id === 'number',
 ) as SupportedChainId[];
 
@@ -25,3 +25,9 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [SupportedChainId.MAINNET];
 export const L1_CHAIN_IDS = [SupportedChainId.MAINNET, SupportedChainId.RINKEBY] as const;
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number];
+
+export const FALLBACK_CHAIN_ID = SupportedChainId.GOERLI;
+
+export const NETWORK_URLS: { [chainId: number]: string } = {
+  [SupportedChainId.GOERLI]: 'https://rpc.goerli.mudit.blog/',
+};

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
-import { injected } from 'connectors';
+import { network } from 'connectors';
 import { NetworkContextName } from 'constants/misc';
-import { useEagerConnect, useInactiveListener } from 'hooks/web3';
+import { useEagerConnect, useInactiveListener } from 'hooks/useWeb3';
 
 export default function Web3ReactManager({ children }: { children: JSX.Element }) {
   const { active } = useWeb3React();
@@ -15,7 +15,7 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
   // after eagerly trying injected, if the network connect ever isn't active or in an error state, activate itd
   useEffect(() => {
     if (triedEager && !networkActive && !networkError && !active) {
-      activateNetwork(injected);
+      activateNetwork(network);
     }
   }, [triedEager, networkActive, networkError, activateNetwork, active]);
 

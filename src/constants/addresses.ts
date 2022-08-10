@@ -1,6 +1,8 @@
 import { SupportedChainId } from './chains';
 
-type AddressMap = { [chainId: number]: string };
+export type AddressMap = { [chainId: number]: string };
+
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export const ARENA_ADDRESS: AddressMap = {
   [SupportedChainId.GOERLI]: '0x29eB89E03F317B87aB3510bE0ED748CBab916D21',

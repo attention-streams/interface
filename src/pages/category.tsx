@@ -80,7 +80,7 @@ const Category = () => {
       <main>
         <section className={'w-8/12'}>
           <header></header>
-          <main className={'flex flex-wrap'}>{active ? renderList() : <div>Wallet not connected</div>}</main>
+          <main className={'flex flex-wrap'}>{renderList()}</main>
         </section>
         <aside className={'w-4/12'}>
           <button className={'btn-primary btn-large'}>Vote for a Song!</button>
