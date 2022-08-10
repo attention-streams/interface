@@ -1,9 +1,11 @@
 import { Contract } from '@ethersproject/contracts';
 import ArenaJson from '@attentionstreams/contracts/artifacts/contracts/main/Arena.sol/Arena.json';
-import { ARENA_ADDRESS } from 'constants/addresses';
+import { ARENA_ADDRESS, MULTICALL2_ADDRESS } from 'constants/addresses';
 import useActiveWeb3React from 'hooks/useActiveWeb3React';
 import { useMemo } from 'react';
 import { Arena } from 'types/contracts/Arena';
+import useWeb3React from 'hooks/useWeb3';
+import MULTICALL2_ABI from 'abis/MULTICALL2.json';
 
 import { getContract } from '../utils';
 
@@ -18,9 +20,6 @@ export function useContract<T extends Contract = Contract>(
   const { library, account, chainId } = useActiveWeb3React();
 
   return useMemo(() => {
-    console.log('useActiveWeb3React');
-    console.log(chainId);
-    console.log(account);
     if (!addressOrAddressMap || !ABI || !library || !chainId) return null;
     let address: string | undefined;
     if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap;
@@ -37,4 +36,10 @@ export function useContract<T extends Contract = Contract>(
 
 export function useArenaContract() {
   return useContract<Arena>(ARENA_ADDRESS, ArenaABI, true);
+}
+
+export function useMulticall2Contract() {
+  const { chainId } = useWeb3React();
+  const address = useMemo(() => (chainId ? MULTICALL2_ADDRESS[chainId] : undefined), [chainId]);
+  return useContract(address, MULTICALL2_ABI);
 }
