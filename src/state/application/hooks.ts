@@ -36,7 +36,7 @@ export function useAddPopup(): (content: PopupContent, key?: string, removeAfter
 
   return useCallback(
     (content: PopupContent, key?: string, removeAfterMs?: number) => {
-      const ms = removeAfterMs ?? chainId == 1 ? REMOVE_AFTER_MS : L2_REMOVE_AFTER_MS;
+      const ms = removeAfterMs ?? chainId === 1 ? REMOVE_AFTER_MS : L2_REMOVE_AFTER_MS;
       dispatch(addPopup({ content, key, removeAfterMs: ms }));
     },
     [dispatch, chainId],
