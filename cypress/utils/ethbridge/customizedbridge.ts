@@ -4,9 +4,11 @@
 // https://on.cypress.io/custom-commands
 // ***********************************************
 
+import { Wallet } from '@ethersproject/wallet';
+import { JsonRpcProvider } from '@ethersproject/providers';
 import { formatChainId } from '../../../src/utils';
 
-import { SAMPLE_ERROR_MESSAGE, TEST_ADDRESS_NEVER_USE } from '../data';
+import { SAMPLE_ERROR_MESSAGE, TEST_ADDRESS_NEVER_USE, TEST_PRIVATE_KEY } from '../data';
 import { BigNumber } from '@ethersproject/bignumber';
 import {
   fakeBlockByNumberResponse,
@@ -14,7 +16,7 @@ import {
   fakeTransactionReceipt,
   latestBlock,
 } from '../fake_tx_data';
-import { SupportedChainId } from '../../../src/constants/chains';
+import { NETWORK_URLS, SupportedChainId } from '../../../src/constants/chains';
 import { keccak256 } from './abiutils';
 import { Eip1193Bridge } from '@ethersproject/experimental';
 import { GENERIC_ERROR_CODE, GENERIC_ERROR_CODE_2, USER_DENIED_REQUEST_ERROR_CODE } from '../../../src/utils/web3';
@@ -312,6 +314,10 @@ export class CustomizedBridge extends Eip1193Bridge {
   }
 }
 
+const defaultChainId = SupportedChainId.GOERLI;
+export const provider = new JsonRpcProvider(NETWORK_URLS[defaultChainId], defaultChainId);
+export const signer = new Wallet(TEST_PRIVATE_KEY, provider);
+
 export function getCustomizedBridge() {
-  return new CustomizedBridge();
+  return new CustomizedBridge(signer, provider);
 }
