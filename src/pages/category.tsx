@@ -5,6 +5,7 @@ import { useTopic } from 'hooks/useArena';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../connectors';
 import { useParams } from 'react-router-dom';
+import { shortenAddress } from 'utils/index';
 
 const Category = () => {
   const { active, account, activate } = useWeb3React();
@@ -19,10 +20,10 @@ const Category = () => {
 
   const renderConnector = () => {
     return active ? (
-      <p>Wallet Connected {account}</p>
+      <p data-testid="wallet-connect">Wallet Connected {shortenAddress(account)}</p>
     ) : (
-      <button className={'btn-primary btn-large'} onClick={connect}>
-        connect
+      <button data-testid="wallet-connect" className={'btn-primary btn-large'} onClick={connect}>
+        Connect Wallet
       </button>
     );
   };
@@ -72,7 +73,7 @@ const Category = () => {
 
   return (
     <div className={'px-24 py-24'}>
-      {renderConnector()}
+      <div>{renderConnector()}</div>
       <header className={'bg-gradient-light w-full h-48 rounded-3xl flex p-6'}>
         <div>
           <h1>Songs were written in a hotel room</h1>

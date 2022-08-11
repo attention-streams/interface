@@ -14,7 +14,7 @@ import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core';
 import { NetworkContextName } from './constants/misc';
 import Web3ReactManager from './components/Web3ReactManager';
 import { getLibrary } from 'utils/library';
-import RoutePath from './routes';
+import RoutePath, { getRoute, RouteParam } from './routes';
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
@@ -40,7 +40,16 @@ function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path={RoutePath.CATEGORY} element={<Category />} />
-                  <Route path={RoutePath.LANDING} element={<Navigate to={RoutePath.CATEGORY.replace(':id', '0')} />} />
+                  <Route
+                    path={RoutePath.LANDING}
+                    element={
+                      <Navigate
+                        to={getRoute(RoutePath.CATEGORY, {
+                          [RouteParam.CATEGORY_ID]: '0',
+                        })}
+                      />
+                    }
+                  />
                 </Routes>
               </BrowserRouter>
             </ReduxProvider>

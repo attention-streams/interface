@@ -2,6 +2,8 @@ import { Contract } from '@ethersproject/contracts';
 import { AddressZero } from '@ethersproject/constants';
 import { getAddress } from '@ethersproject/address';
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers';
+import { hexStripZeros } from '@ethersproject/bytes';
+import { BigNumber } from '@ethersproject/bignumber';
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -29,4 +31,15 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
   }
 
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any);
+}
+
+export function shortenAddress(address: string | null | undefined) {
+  if (!address) return '';
+  const addressStart = address.substring(0, 6);
+  const addressEnd = address.substring(address.length - 4);
+  return `${addressStart}...${addressEnd}`;
+}
+
+export function formatChainId(chainId: string) {
+  return hexStripZeros(BigNumber.from(chainId).toHexString());
 }
