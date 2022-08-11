@@ -54,7 +54,7 @@ export function useTopic(topicId: number) {
 
   const [nextChoiceIdResult] = useSingleContractMultipleMethods(arenaContract, nextChoiceIdCall);
 
-  const nextChoiceId = nextChoiceIdResult?.result?.[0];
+  const nextChoiceId: BigNumber | null = nextChoiceIdResult?.result?.[0];
 
   const getChoicesCallInputs = useMemo(() => {
     const choiceIds: number[] = nextChoiceId ? Array.from(Array(nextChoiceId.toNumber()).keys()) : [];
@@ -62,7 +62,6 @@ export function useTopic(topicId: number) {
   }, [nextChoiceId, topicId]);
 
   const getChoicesResult = useSingleContractMultipleData(arenaContract, 'topicChoices', getChoicesCallInputs);
-
   const choices = useMemo(() => {
     return getChoicesResult.reduce((acc: ChoiceStruct[], value) => {
       if (!value.result) return acc;
@@ -78,5 +77,11 @@ export function useTopic(topicId: number) {
     }, []);
   }, [getChoicesResult]);
 
-  return { nextChoiceId, choices };
+  const nextChoiceIdLoaded = nextChoiceIdResult && !nextChoiceIdResult.loading;
+  const topicsLoaded =
+    nextChoiceId?.toNumber() === 0 ||
+    (getChoicesResult.length > 0 && !getChoicesResult.some((callState) => callState.loading));
+  const loaded = nextChoiceIdLoaded && topicsLoaded;
+
+  return { nextChoiceId, choices, loaded };
 }

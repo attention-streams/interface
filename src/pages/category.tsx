@@ -4,7 +4,7 @@ import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { useTopic } from 'hooks/useArena';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../connectors';
-import { Button } from '@mui/material';
+import { useParams } from 'react-router-dom';
 
 const Category = () => {
   const { active, account, activate } = useWeb3React();
@@ -18,14 +18,20 @@ const Category = () => {
   }
 
   const renderConnector = () => {
-    return active ? <p>Wallet Connected {account}</p> : <Button onClick={connect}>connect</Button>;
+    return active ? (
+      <p>Wallet Connected {account}</p>
+    ) : (
+      <button className={'btn-primary btn-large'} onClick={connect}>
+        connect
+      </button>
+    );
   };
-
-  const { choices } = useTopic(0);
+  const { id: topicId } = useParams();
+  const { choices, loaded } = useTopic(Number(topicId));
   const list = useMemo(
     () =>
       choices.map((_c) => ({
-        thumbnail: 'sample.png',
+        thumbnail: '/sample.png',
         title: 'Dark Days and Beautiful',
         tags: [
           { subject: 'Mood', title: 'Confused' },
@@ -39,11 +45,11 @@ const Category = () => {
   );
 
   function renderList() {
-    return list.length ? (
+    return loaded ? (
       list.map((song, i) => {
         return (
           <div key={i} className={'bg-squircle p-4'}>
-            <img alt="choice" src={'sample.png'} className={'rounded-xl'} />
+            <img alt="choice" src={'/sample.png'} className={'rounded-xl'} />
             <p className={'font-bold text-xl'}>{song.title}</p>
             {song.tags.map((tag, i) => {
               return (
@@ -75,7 +81,7 @@ const Category = () => {
             suggests, Jonathan recorded all of the songs here in a hotel room.
           </p>
         </div>
-        <img alt="header" src={'category-header.png'} />
+        <img alt="header" src={'/category-header.png'} />
       </header>
       <main>
         <section className={'w-8/12'}>

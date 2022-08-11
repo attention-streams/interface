@@ -3,6 +3,8 @@ import './App.css';
 import Category from 'pages/category';
 import store from 'state';
 import { Provider as ReduxProvider } from 'react-redux';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
 import ApplicationUpdater from 'state/application/updater';
 import MulticallUpdater from 'state/multicall/updater';
 import TransactionUpdater from 'state/transactions/updater';
@@ -12,6 +14,7 @@ import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core';
 import { NetworkContextName } from './constants/misc';
 import Web3ReactManager from './components/Web3ReactManager';
 import { getLibrary } from 'utils/library';
+import RoutePath from './routes';
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
@@ -34,7 +37,12 @@ function App() {
           <Web3ReactManager>
             <ReduxProvider store={store}>
               <Updaters />
-              <Category />
+              <BrowserRouter>
+                <Routes>
+                  <Route path={RoutePath.CATEGORY} element={<Category />} />
+                  <Route path={RoutePath.LANDING} element={<Navigate to={RoutePath.CATEGORY.replace(':id', '0')} />} />
+                </Routes>
+              </BrowserRouter>
             </ReduxProvider>
           </Web3ReactManager>
         </Web3ProviderNetwork>
