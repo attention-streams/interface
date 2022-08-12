@@ -20,6 +20,7 @@ import { NETWORK_URLS, SupportedChainId } from '../../../src/constants/chains';
 import { keccak256 } from './abiutils';
 import { Eip1193Bridge } from '@ethersproject/experimental';
 import { GENERIC_ERROR_CODE, GENERIC_ERROR_CODE_2, USER_DENIED_REQUEST_ERROR_CODE } from '../../../src/utils/web3';
+import { AbiHandler } from './AbiHandler';
 
 function isTheSameAddress(address1: string, address2: string) {
   return address1.toLowerCase() === address2.toLowerCase();
@@ -30,12 +31,12 @@ function sleep(ms: number) {
 }
 
 export class CustomizedBridgeContext {
-  chainId = formatChainId(String(SupportedChainId.RINKEBY));
-  supportedChainIds: string[] = [];
+  chainId = formatChainId(String(SupportedChainId.GOERLI));
+  supportedChainIds: string[] = [formatChainId(String(SupportedChainId.GOERLI))];
 
   latestBlockNumber = 1;
   fakeTransactionIndex = 0;
-  handlers: any = {};
+  handlers: { [key: string]: AbiHandler } = {};
 
   getLatestBlock() {
     this.latestBlockNumber++;
@@ -48,8 +49,8 @@ export class CustomizedBridgeContext {
     return keccak256([this.fakeTransactionIndex++]);
   }
 
-  setHandler(address: string, { abi, handler }: { abi: any; handler: any }) {
-    this.handlers[address] = { abi, handler };
+  setHandler(address: string, handler: AbiHandler) {
+    this.handlers[address] = handler;
   }
 }
 
@@ -111,27 +112,28 @@ export class CustomizedBridge extends Eip1193Bridge {
     this.transactionWaitTime = waitTime;
   }
 
-  on(key: string, f: any) {
+  on(eventName: string | symbol, listener: (...args: any[]) => void) {
     let found = false;
     for (const k of enumKeys(EventHandlerKey)) {
-      if (key === EventHandlerKey[k]) {
+      if (eventName === EventHandlerKey[k]) {
         found = true;
-        this.eventListeners[key] = f;
+        this.eventListeners[eventName] = listener;
         break;
       }
     }
     if (!found) {
-      console.error(`Bridge: Unknown Event Key ${key}`);
-      throw Error(`Bridge: Unknown Event Key ${key}`);
+      console.error(`Bridge: Unknown Event Key ${String(eventName)}`);
+      throw Error(`Bridge: Unknown Event Key ${String(eventName)}`);
     }
+    return this;
   }
 
   switchEthereumChainSpy(chainId: string) {}
 
   addEthereumChainSpy(chainId: string) {}
 
-  setHandler(address: string, { abi, handler }: { abi: any; handler: any }) {
-    this.context.setHandler(address, { abi, handler });
+  setHandler(address: string, handler: AbiHandler) {
+    this.context.setHandler(address, handler);
   }
 
   async sendAsync(...args: any[]) {
@@ -240,16 +242,11 @@ export class CustomizedBridge extends Eip1193Bridge {
       setResult(this.context.getLatestBlock().number);
     }
     if (method === 'eth_call') {
-      // for (const contractAddress in this.context.handlers) {
-      //   if (isTheSameAddress(contractAddress, params[0].to)) {
-      //     const { abi, handler } = this.context.handlers[contractAddress];
-      //     const decoded = decodeEthCall(abi, params[0].data);
-      //     if (handler[decoded.method]) {
-      //       const res = await handler[decoded.method](this.context, decoded.inputs);
-      //       setResult(encodeEthResult(abi, decoded.method, res));
-      //     }
-      //   }
-      // }
+      for (const contractAddress in this.context.handlers) {
+        if (isTheSameAddress(contractAddress, params[0].to)) {
+          await this.context.handlers[contractAddress].handleCall(this.context, params[0].data, setResult);
+        }
+      }
     }
     if (method === 'eth_estimateGas') {
       if (this.transactionStatus === TransactionStatus.INSUFFICIENT_FUND) {
@@ -259,16 +256,11 @@ export class CustomizedBridge extends Eip1193Bridge {
       }
     }
     if (method === 'eth_sendTransaction') {
-      // for (const contractAddress in this.context.handlers) {
-      //   if (isTheSameAddress(contractAddress, params[0].to)) {
-      //     const { abi, handler } = this.context.handlers[contractAddress];
-      //     const decoded = decodeEthCall(abi, params[0].data);
-      //     if (handler[decoded.method]) {
-      //       await handler[decoded.method](this.context, decoded.inputs);
-      //       setResult(this.context.getFakeTransactionHash());
-      //     }
-      //   }
-      // }
+      for (const contractAddress in this.context.handlers) {
+        if (isTheSameAddress(contractAddress, params[0].to)) {
+          await this.context.handlers[contractAddress].handleTransaction(this.context, params[0].data, setResult);
+        }
+      }
       if (this.transactionStatus === TransactionStatus.SUCCESS) {
         setResult(this.context.getFakeTransactionHash());
       } else if (this.transactionStatus === TransactionStatus.USER_DENIED) {

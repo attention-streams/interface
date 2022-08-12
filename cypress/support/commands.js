@@ -6,7 +6,7 @@
 
 /* eslint-disable no-undef */
 
-import { getCustomizedBridge } from '../utils/ethbridge/customizedbridge';
+import { getCustomizedBridge } from '../utils/ethbridge/CustomizedBridge';
 
 Cypress.Commands.add('shouldBeCalled', (alias, timesCalled) => {
   expect(

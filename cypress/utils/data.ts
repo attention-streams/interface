@@ -1,5 +1,6 @@
 import { shortenAddress } from '../../src/utils';
 import { Wallet } from '@ethersproject/wallet';
+import { ChoiceStruct, TopicStruct } from '../../src/types/contracts/Arena';
 
 // todo: figure out how env vars actually work in CI
 // const TEST_PRIVATE_KEY = Cypress.env('INTEGRATION_TEST_PRIVATE_KEY')
@@ -13,3 +14,37 @@ export const TEST_ADDRESS_NEVER_USE_2 = new Wallet(TEST_PRIVATE_KEY_2).address;
 export const TEST_ADDRESS_NEVER_USE_SHORTENED = shortenAddress(TEST_ADDRESS_NEVER_USE);
 
 export const SAMPLE_ERROR_MESSAGE = 'An error occurred';
+
+export const topics: {
+  [topicId: number]: TopicStruct;
+} = {
+  0: {
+    cycleDuration: 2,
+    startBlock: 0,
+    sharePerCyclePercentage: 10000,
+    prevContributorsFeePercentage: 1200,
+    topicFeePercentage: 500,
+    maxChoiceFeePercentage: 2500,
+    relativeSupportThreshold: 0,
+    fundingPeriod: 0,
+    fundingPercentage: 0,
+    funds: '0xaa6cD66cA508F22fe125e83342c7dc3dbE779250',
+    metaDataUrl: 'http://168.119.127.117:6040/topic1.json',
+  },
+};
+
+export const choices: {
+  [topicId: number]: {
+    [choiceId: number]: ChoiceStruct;
+  };
+} = {
+  0: {
+    0: {
+      description: 'First Choice',
+      funds: '0xaa6cD66cA508F22fe125e83342c7dc3dbE779250',
+      feePercentage: 1000,
+      fundingTarget: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+      metaDataUrl: 'http://168.119.127.117:6040/choice1.json',
+    },
+  },
+};
