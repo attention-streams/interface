@@ -49,7 +49,7 @@ const Category = () => {
     return loaded ? (
       list.map((song, i) => {
         return (
-          <div key={i} className={'bg-squircle p-4'}>
+          <div key={i} className={'bg-squircle p-4'} data-testid={`category-list-item-${i}`}>
             <img alt="choice" src={'/sample.png'} className={'rounded-xl'} />
             <p className={'font-bold text-xl'}>{song.title}</p>
             {song.tags.map((tag, i) => {
