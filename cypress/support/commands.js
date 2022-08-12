@@ -42,15 +42,15 @@ Cypress.Commands.add('setAbiHandler', (address, abiHandler) => {
     web3Bridge.setHandler(address, abiHandler)
   });
 });
-//
-// beforeEach(() => {
-//   cy.on('window:before:load', (win) => {
-//     cy.spy(win.console, 'error').as('spyWinConsoleError');
-//     cy.spy(win.console, 'warn').as('spyWinConsoleWarn');
-//   });
-// });
-//
-// afterEach(() => {
-//   cy.get('@spyWinConsoleError').should('have.callCount', 0);
-//   cy.get('@spyWinConsoleWarn').should('have.callCount', 0);
-// });
+
+beforeEach(() => {
+  cy.on('window:before:load', (win) => {
+    cy.spy(win.console, 'error').as('spyWinConsoleError');
+    cy.spy(win.console, 'warn').as('spyWinConsoleWarn');
+  });
+});
+
+afterEach(() => {
+  cy.get('@spyWinConsoleError').should('have.callCount', 0);
+  cy.get('@spyWinConsoleWarn').should('have.callCount', 0);
+});
