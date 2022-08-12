@@ -7,6 +7,7 @@
 
 // Import commands.ts using ES2015 syntax:
 import './commands';
+import { AbiHandler } from '../utils/ethbridge/AbiHandler';
 
 declare global {
   namespace Cypress {
@@ -16,6 +17,8 @@ declare global {
        * @example cy.dataCy('greeting')
        */
       setupWeb3Bridge(): void;
+
+      setAbiHandler(address: string, handler: AbiHandler): void;
     }
   }
 }

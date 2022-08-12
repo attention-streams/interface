@@ -30,19 +30,27 @@ Cypress.on('window:before:load', (win) => {
 });
 
 Cypress.Commands.add('setupWeb3Bridge', () => {
+  const web3Bridge = getCustomizedBridge()
+  cy.wrap(web3Bridge).as('web3Bridge')
   cy.on('window:before:load', (win) => {
-    win.ethereum = getCustomizedBridge();
+    win.ethereum = web3Bridge;
   });
 });
 
-beforeEach(() => {
-  cy.on('window:before:load', (win) => {
-    cy.spy(win.console, 'error').as('spyWinConsoleError');
-    cy.spy(win.console, 'warn').as('spyWinConsoleWarn');
+Cypress.Commands.add('setAbiHandler', (address, abiHandler) => {
+  cy.get('@web3Bridge').then(web3Bridge => {
+    web3Bridge.setHandler(address, abiHandler)
   });
 });
-
-afterEach(() => {
-  cy.get('@spyWinConsoleError').should('have.callCount', 0);
-  cy.get('@spyWinConsoleWarn').should('have.callCount', 0);
-});
+//
+// beforeEach(() => {
+//   cy.on('window:before:load', (win) => {
+//     cy.spy(win.console, 'error').as('spyWinConsoleError');
+//     cy.spy(win.console, 'warn').as('spyWinConsoleWarn');
+//   });
+// });
+//
+// afterEach(() => {
+//   cy.get('@spyWinConsoleError').should('have.callCount', 0);
+//   cy.get('@spyWinConsoleWarn').should('have.callCount', 0);
+// });

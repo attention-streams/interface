@@ -12,15 +12,17 @@ function isTheSameAddress(address1: string, address2: string) {
 export class ArenaHandler extends AbiHandler {
   abi = ArenaJson.abi;
 
-  async nextChoiceId(context: CustomizedBridgeContext, decodedInput: [BigNumber]) {
-    const [topicId] = decodedInput;
-    return [Object.values(choices[topicId.toNumber()]).length];
-  }
+  methods = {
+    async nextChoiceId(context: CustomizedBridgeContext, decodedInput: [BigNumber]) {
+      const [topicId] = decodedInput;
+      return [Object.values(choices[topicId.toNumber()]).length];
+    },
 
-  async topicChoices(context: CustomizedBridgeContext, decodedInput: [BigNumber, BigNumber]) {
-    const [topicId, choiceId] = decodedInput;
-    return [Object.values(choices[topicId.toNumber()][choiceId.toNumber()])];
-  }
+    async topicChoices(context: CustomizedBridgeContext, decodedInput: [BigNumber, BigNumber]) {
+      const [topicId, choiceId] = decodedInput;
+      return [Object.values(choices[topicId.toNumber()][choiceId.toNumber()])];
+    },
+  };
 }
 
 export const getArenaHandler = () => new ArenaHandler();

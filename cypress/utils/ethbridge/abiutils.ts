@@ -13,7 +13,14 @@ export function encodeEthResult(abi: any, funcName: string, result: (BigNumber |
   return iface.encodeFunctionResult(funcName, result);
 }
 
-export function decodeEthCall(abi: any, input: any) {
+export type DecodedCall = {
+  inputs: any[];
+  method: string;
+  names: any[];
+  types: any[];
+};
+
+export function decodeEthCall(abi: any, input: any): DecodedCall {
   const decoder = new InputDataDecoder(abi);
   return decoder.decodeData(input);
 }

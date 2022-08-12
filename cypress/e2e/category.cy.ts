@@ -9,17 +9,14 @@ describe('Category', () => {
     cy.setupWeb3Bridge();
     const arenaHandler = getArenaHandler();
     const multicallHandler = getMulticallHandler();
+    cy.setAbiHandler(ARENA_ADDRESS[SupportedChainId.GOERLI], arenaHandler);
+    cy.setAbiHandler(MULTICALL2_ADDRESS[SupportedChainId.GOERLI], multicallHandler);
+
     cy.visit(
       getRoute(RoutePath.CATEGORY, {
         [RouteParam.CATEGORY_ID]: '0',
       }),
     );
-    cy.window().then((win) => {
-      // @ts-ignore
-      const bridge = win.ethereum as CustomizedBridge;
-      bridge.setHandler(ARENA_ADDRESS[SupportedChainId.GOERLI], arenaHandler);
-      bridge.setHandler(MULTICALL2_ADDRESS[SupportedChainId.GOERLI], multicallHandler);
-    });
     cy.get('[data-testid=category-list-item-0]').should('exist');
   });
 });
