@@ -58,6 +58,7 @@ const Category = () => {
       list.map((song, i) => {
         return (
           <div key={i} className={'bg-squircle w-[311px] h-[316px] bg-cover p-4'} data-testid={`category-list-item-${i}`}>
+            {/* todo img below must be an iframe link to youtube video*/}
             <img alt="choice" src={'/sample.png'} className={'rounded-xl'} />
             <div className={'px-2 pt-1'}>
             <p className={'font-bold text-xl'}>{song.title}</p>
