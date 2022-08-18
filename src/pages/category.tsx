@@ -164,7 +164,7 @@ const Category = () => {
           <header></header>
           <main className={'flex flex-wrap gap-6'}>{renderList()}</main>
         </section>
-        <aside className={'basis-64'}>
+        <aside className={'w-68'}>
           <button className={'btn-primary btn-large w-full'}>Vote for a Song!</button>
           <section>
             <div className={'time-left'}></div>
