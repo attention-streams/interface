@@ -15,6 +15,69 @@ const style = {
   "--fa-secondary-opacity": 0.4
 } as React.CSSProperties;
 
+
+const dummyLisy = [{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+},{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+},{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+},{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+},{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+},{
+  thumbnail: '/sample.png',
+  title: 'Dark Days and Beautiful',
+  tags: [
+    { subject: 'Mood', title: 'Confused' },
+    { subject: 'Genre', title: 'Folk' },
+  ],
+  by: 'jonathan.eth',
+  date: 'June 9, 2022',
+  opensea: 'somelink',
+}]
+
 const Category = () => {
   const { active, account, activate } = useWeb3React();
 
@@ -55,7 +118,7 @@ const Category = () => {
 
   function renderList() {
     return loaded ? (
-      list.map((song, i) => {
+      dummyLisy.map((song, i) => {
         return (
           <div key={i} className={'bg-squircle w-[311px] h-[316px] bg-cover p-4'} data-testid={`category-list-item-${i}`}>
             {/* todo img below must be an iframe link to youtube video*/}
@@ -86,7 +149,7 @@ const Category = () => {
   return (
     <div className={'px-24 py-24'}>
       <div>{renderConnector()}</div>
-      <header className={'bg-gradient-light w-full h-48 rounded-3xl flex p-6 mb-4'}>
+      <header className={'bg-gradient-light w-full h-48 rounded-3xl flex p-6 mb-12'}>
         <div>
           <h1>Songs were written in a hotel room</h1>
           <p className={'text-label'}>
@@ -96,13 +159,13 @@ const Category = () => {
         </div>
         <img alt="header" src={'/category-header.png'} />
       </header>
-      <main>
-        <section className={'w-8/12'}>
+      <main className={'flex'}>
+        <section className={'flex-1'}>
           <header></header>
-          <main className={'flex flex-wrap'}>{renderList()}</main>
+          <main className={'flex flex-wrap gap-6'}>{renderList()}</main>
         </section>
-        <aside className={'w-4/12'}>
-          <button className={'btn-primary btn-large'}>Vote for a Song!</button>
+        <aside className={'basis-64'}>
+          <button className={'btn-primary btn-large w-full'}>Vote for a Song!</button>
           <section>
             <div className={'time-left'}></div>
             <div className={'info-summery'}></div>
