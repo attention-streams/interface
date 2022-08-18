@@ -1,11 +1,19 @@
 import React, { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
+import { faHexagonVerticalNft, faCoffee } from '@fortawesome/pro-duotone-svg-icons';
 import { useTopic } from 'hooks/useArena';
 import { useWeb3React } from '@web3-react/core';
 import { injected } from '../connectors';
 import { useParams } from 'react-router-dom';
 import { shortenAddress } from 'utils/index';
+
+// todo we need to find a way to use our color variables (tailwind) to set primary and secondary color of duoton icons
+const style = {
+  "--fa-primary-color": "#353535",
+  "--fa-secondary-color": "#EF476F",
+  "--fa-primary-opacity": 1,
+  "--fa-secondary-opacity": 0.4
+} as React.CSSProperties;
 
 const Category = () => {
   const { active, account, activate } = useWeb3React();
@@ -49,20 +57,23 @@ const Category = () => {
     return loaded ? (
       list.map((song, i) => {
         return (
-          <div key={i} className={'bg-squircle p-4'} data-testid={`category-list-item-${i}`}>
+          <div key={i} className={'bg-squircle w-[311px] h-[316px] bg-cover p-4'} data-testid={`category-list-item-${i}`}>
             <img alt="choice" src={'/sample.png'} className={'rounded-xl'} />
+            <div className={'px-2 pt-1'}>
             <p className={'font-bold text-xl'}>{song.title}</p>
             {song.tags.map((tag, i) => {
               return (
-                <span key={i} className={''}>
-                  {tag.subject} <span className={'font-semibold'}>{tag.title}</span>
+                <span key={i} className={'chips mr-2'}>
+                  {tag.subject}: <span className={'font-semibold'}>{tag.title}</span>
                 </span>
               );
             })}
-            <a href="#">
-              <FontAwesomeIcon icon={faCoffee} href={song.opensea} />
-              View on Opensea
+            <p className={'text-dark-gray mt-4'}>Added by <span className={'text-black font-semibold'}>{song.by}</span> at {song.date}</p>
+            <a href={song.opensea} className={'flex gap-1.5 mt-2'}>
+              <FontAwesomeIcon fontSize={24} icon={faHexagonVerticalNft} style={style} />
+              <span className={'text-primary font-semibold text-under underline'}>View on Opensea</span>
             </a>
+            </div>
           </div>
         );
       })
@@ -74,7 +85,7 @@ const Category = () => {
   return (
     <div className={'px-24 py-24'}>
       <div>{renderConnector()}</div>
-      <header className={'bg-gradient-light w-full h-48 rounded-3xl flex p-6'}>
+      <header className={'bg-gradient-light w-full h-48 rounded-3xl flex p-6 mb-4'}>
         <div>
           <h1>Songs were written in a hotel room</h1>
           <p className={'text-label'}>
