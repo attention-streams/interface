@@ -1,8 +1,9 @@
 import { useArenaContract } from 'hooks/useContracts';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSingleContractMultipleData, useSingleContractMultipleMethods } from 'state/multicall/hooks';
-import { ChoiceStruct, TopicStruct } from '../types/contracts/Arena';
+import { TopicStruct } from '../types/contracts/Arena';
 import { BigNumber } from 'ethers';
+import { Choice } from '../types';
 
 export function useArena() {
   const arenaContract = useArenaContract();
@@ -62,20 +63,38 @@ export function useTopic(topicId: number) {
   }, [nextChoiceId, topicId]);
 
   const getChoicesResult = useSingleContractMultipleData(arenaContract, 'topicChoices', getChoicesCallInputs);
-  const choices = useMemo(() => {
-    return getChoicesResult.reduce((acc: ChoiceStruct[], value) => {
+  const choicesRaw = useMemo(() => {
+    return getChoicesResult.reduce((acc: Choice[], value, i) => {
       if (!value.result) return acc;
       const result = value.result[0];
       acc.push({
+        id: i,
         description: result[0],
         funds: result[1],
         feePercentage: result[2],
         fundingTarget: result[3],
         metaDataUrl: result[4],
+        meta: {
+          thumbnail: 'https://bafybeicp7kjqwzzyfuryefv2l5q23exl3dbd6rgmuqzxs3cy6vaa2iekka.ipfs.w3s.link/sample.png',
+          title: 'Dark Days and Beautiful',
+          tags: [
+            { subject: 'Mood', title: 'Confused' },
+            { subject: 'Genre', title: 'Folk' },
+          ],
+          by: 'jonathan.eth',
+          date: 'June 9, 2022',
+          opensea: 'somelink',
+        },
       });
       return acc;
     }, []);
   }, [getChoicesResult]);
+
+  const [choices, setChoices] = useState<Choice[]>([]);
+
+  useEffect(() => {
+    setChoices(choicesRaw);
+  }, [choicesRaw]);
 
   const nextChoiceIdLoaded = nextChoiceIdResult && !nextChoiceIdResult.loading;
   const topicsLoaded =
@@ -83,5 +102,5 @@ export function useTopic(topicId: number) {
     (getChoicesResult.length > 0 && !getChoicesResult.some((callState) => callState.loading));
   const loaded = nextChoiceIdLoaded && topicsLoaded;
 
-  return { nextChoiceId, choices, loaded };
+  return { nextChoiceId, choicesRaw, choices, loaded };
 }
