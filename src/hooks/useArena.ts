@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSingleContractMultipleData, useSingleContractMultipleMethods } from 'state/multicall/hooks';
 import { TopicStruct } from '../types/contracts/Arena';
 import { BigNumber } from 'ethers';
-import { Choice } from '../types';
+import { Choice, SongMeta } from '../types';
+import axios from 'axios';
 
 export function useArena() {
   const arenaContract = useArenaContract();
@@ -74,17 +75,6 @@ export function useTopic(topicId: number) {
         feePercentage: result[2],
         fundingTarget: result[3],
         metaDataUrl: result[4],
-        meta: {
-          thumbnail: 'https://bafybeicp7kjqwzzyfuryefv2l5q23exl3dbd6rgmuqzxs3cy6vaa2iekka.ipfs.w3s.link/sample.png',
-          title: 'Dark Days and Beautiful',
-          tags: [
-            { subject: 'Mood', title: 'Confused' },
-            { subject: 'Genre', title: 'Folk' },
-          ],
-          by: 'jonathan.eth',
-          date: 'June 9, 2022',
-          opensea: 'somelink',
-        },
       });
       return acc;
     }, []);
@@ -93,8 +83,30 @@ export function useTopic(topicId: number) {
   const [choices, setChoices] = useState<Choice[]>([]);
 
   useEffect(() => {
-    setChoices(choicesRaw);
-  }, [choicesRaw]);
+    if (!choices.length) {
+      setChoices(choicesRaw);
+      const loadedChoices: Choice[] = [];
+      for (let i = 0; i < choicesRaw.length; i++) {
+        axios
+          .get<SongMeta>(choicesRaw[i].metaDataUrl)
+          .then((m) => {
+            loadedChoices.push({
+              ...choicesRaw[i],
+              meta: m.data,
+            });
+          })
+          .catch((_e) => {
+            loadedChoices.push(choicesRaw[i]);
+          })
+          .finally(() => {
+            if (loadedChoices.length === choicesRaw.length) {
+              loadedChoices.sort((a, b) => a.id - b.id);
+              setChoices(loadedChoices);
+            }
+          });
+      }
+    }
+  }, [choices.length, choicesRaw]);
 
   const nextChoiceIdLoaded = nextChoiceIdResult && !nextChoiceIdResult.loading;
   const topicsLoaded =
