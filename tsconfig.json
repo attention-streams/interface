@@ -6,6 +6,18 @@
       "dom.iterable",
       "esnext"
     ],
+    "paths": {
+      "assets/*": ["./assets/*"],
+      "components/*": ["./components/*"],
+      "constants/*": ["./constants/*"],
+      "hooks/*": ["./hooks/*"],
+      "lib/*": ["./lib/*"],
+      "state": ["./state"],
+      "state/*": ["./state/*"],
+      "theme": ["./theme"],
+      "theme/*": ["./theme/*"],
+      "utils/*": ["./utils/*"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,7 +31,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "./src"
   },
   "include": [
     "src"
