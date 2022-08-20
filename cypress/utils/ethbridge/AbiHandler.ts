@@ -8,8 +8,6 @@ export class AbiHandler {
 
   async handleCall(context: CustomizedBridgeContext, data: string, setResult?: (arg0: string) => void) {
     const decoded = decodeEthCall(this.abi, data);
-    console.log('decoded');
-    console.log(decoded);
     if (decoded.method === 'multicall') {
       const [deadline, [data]] = decoded.inputs;
       await this.handleCall(context, data, setResult);

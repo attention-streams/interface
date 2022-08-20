@@ -27,5 +27,3 @@ export class BaseMulticallHandler extends AbiHandler {
     },
   };
 }
-
-export const getMulticallHandler = () => new BaseMulticallHandler();

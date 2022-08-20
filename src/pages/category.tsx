@@ -50,7 +50,10 @@ const Category = () => {
             {/* todo img below must be an iframe link to youtube video*/}
             <img
               alt="choice"
-              src={'https://bafybeicp7kjqwzzyfuryefv2l5q23exl3dbd6rgmuqzxs3cy6vaa2iekka.ipfs.w3s.link/sample.png'}
+              src={
+                song.meta?.thumbnail ||
+                'https://bafybeicp7kjqwzzyfuryefv2l5q23exl3dbd6rgmuqzxs3cy6vaa2iekka.ipfs.w3s.link/sample.png'
+              }
               className={'rounded-xl'}
             />
             <div className={'px-2 pt-1'}>
@@ -62,10 +65,12 @@ const Category = () => {
                   </span>
                 );
               })}
-              <p className={'text-dark-gray mt-4'}>
-                Added by <span className={'text-black font-semibold'}>{song.meta?.by}</span> at {song.meta?.date}
-              </p>
-              <a href={song.meta?.opensea} className={'flex gap-1.5 mt-2'}>
+              {song.meta && (
+                <p className={'text-dark-gray mt-4'} data-testid={`category-list-item-${song.id}-meta`}>
+                  Added by <span className={'text-black font-semibold'}>{song.meta?.by}</span> at {song.meta?.date}
+                </p>
+              )}
+              <a href={song.meta?.opensea || '#'} className={'flex gap-1.5 mt-2'}>
                 <FontAwesomeIcon fontSize={24} icon={faHexagonVerticalNft} style={style} />
                 <span className={'text-primary font-semibold text-under underline'}>View on Opensea</span>
               </a>

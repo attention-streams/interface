@@ -24,5 +24,3 @@ export class ArenaHandler extends AbiHandler {
     },
   };
 }
-
-export const getArenaHandler = () => new ArenaHandler();
